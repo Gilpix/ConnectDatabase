@@ -19,7 +19,7 @@ import net.sf.json.JSONObject;
 
 /**
  *
- * @author 1895250
+ * @author 1895270
  */
 public class Items {
     
@@ -258,9 +258,9 @@ public class Items {
             finally{
                     try {
                         //write list of Items into json
-                        akk.writeJsonArray("client",mainArray);
+                        akk.writeJsonArray("Items",mainArray);
                         //read list of Items from json
-                        String json1 = akk.readJson("client");
+                        String json1 = akk.readJson("Items");
                         JSONArray tempObj1 = JSONArray.fromObject(json1);
                         System.out.println(tempObj1);
                         
@@ -344,9 +344,9 @@ public class Items {
             finally{
                     try {
                         //write Item into json
-                        akk.writeJsonObject("client",singleItem);
+                        akk.writeJsonObject("Items",singleItem);
                         //read Item from json
-                        String json1 = akk.readJson("client");
+                        String json1 = akk.readJson("Items");
                         JSONObject tempObj1 = JSONObject.fromObject(json1);
                         System.out.println(tempObj1);
                         

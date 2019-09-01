@@ -16,7 +16,7 @@ import net.sf.json.JSONObject;
 
 /**
  *
- * @author 1895250
+ * @author 1895270
  */
 public class Anjkulkam {
 
@@ -29,6 +29,9 @@ public class Anjkulkam {
         
         try {
             Class.forName("oracle.jdbc.OracleDriver");
+            
+              Date realdte=Date.valueOf("2019-03-01");
+       Date changedte=Date.valueOf("2019-03-01");
                         
             
    
@@ -40,12 +43,12 @@ public class Anjkulkam {
       //c.anyClient(109);
         
       
-       Date dte=Date.valueOf("2019-03-01");
+     
        
        anjkulkam.dao.Order ord=new anjkulkam.dao.Order();
-       //ord.insertOrder(17, dte, 1000);
+       //ord.insertOrder(17, realdte, 1000);
        //ord.deleteOrder(19);
-       //ord.updateOrder(17, dte);
+       //ord.updateOrder(17, changedte);
        //ord.listOrder();
        //ord.anyOrder(17);
        
@@ -67,9 +70,9 @@ public class Anjkulkam {
          //itm.anyItems(111);
          
           anjkulkam.dao.Delivery del =new  anjkulkam.dao.Delivery();
-          //del.insertDelivery( 11, dte);
+          //del.insertDelivery( 11, realdte);
           //del.deleteDelivery(11);
-          //del.updateDelivery(11, dte);
+          //del.updateDelivery(11, changedte);
           //del.listDelivery();
           //del.anyDelivery(8);
        
