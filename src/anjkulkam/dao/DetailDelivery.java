@@ -5,11 +5,18 @@
  */
 package anjkulkam.dao;
 
+import java.io.IOException;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 /**
  *
@@ -18,10 +25,41 @@ import java.sql.Statement;
 public class DetailDelivery {
     
     
+     Connection con = null;
+      PreparedStatement stm = null;
+      ResultSet rs = null;
+      
+     private JSONObject mainObject=new JSONObject();
+    private JSONObject singleDeliveryDetail=new JSONObject();
+    private JSONArray mainArray = new JSONArray();
     
-    public void insertDetailDelivery(Connection con, int numDel, int numOrd, int nIt,int d_quantity) throws SQLException {
-         String sql;
-        PreparedStatement stm;
+     anjkulkam.Anjkulkam akk =new anjkulkam.Anjkulkam();
+    
+          
+
+    public DetailDelivery() throws SQLException
+    {
+      
+       try {        
+            DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
+            con = DriverManager.getConnection("jdbc:oracle:thin:@144.217.163.57:1521:XE", "sales", "anypw");
+        } catch (SQLException ex) {
+            System.out.println("In catch of constructor");
+            //Logger.getLogger(Clients.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println( " Error : "+ex.getMessage());
+        }
+        
+        
+    }
+     
+           
+    
+    
+    
+    
+    public void insertDetailDelivery( int numDel, int numOrd, int nIt,int d_quantity) throws SQLException {
+         try { 
+           String sql;
         
         
        
@@ -35,16 +73,49 @@ public class DetailDelivery {
         stm.setInt(4, d_quantity);
         int s1 = stm.executeUpdate();
         
-        System.out.println(s1);
-
+        mainObject = new JSONObject();
+                    mainObject.accumulate("Status", "Successfully inserted");
+        
+      }
       
+      catch(SQLIntegrityConstraintViolationException e) {
+          mainObject.accumulate("Status", "Not inserted");
+          
+          System.out.println( " Error : "+e.getMessage());
+      }
+      catch (SQLException ex) {
+          mainObject.accumulate("Status", "Not inserted");
+             System.out.println( " Error : "+ex.getMessage());
+      }
+       finally{
+                    try {
+                        //Write Status of current insert into json file
+                        akk.writeJsonObject("Status",mainObject);
+                        mainObject.clear();
+                        //Read Status of current insert from json file
+                        String json = akk.readJson("Status");
+                        
+                        JSONObject tempObj = JSONObject.fromObject(json);
+                        System.out.println(tempObj);
+                        con.close();
+                        stm.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(Clients.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (IOException ex) {
+              Logger.getLogger(Clients.class.getName()).log(Level.SEVERE, null, ex);
+          }
+                }
+       
     }
        
        
        
-        public void deleteDetailDelivery(Connection con, int numDel, int numOrd, int nIt) throws SQLException {
-        String sql;
-        PreparedStatement stm;
+       
+       
+        public void deleteDetailDelivery( int numDel, int numOrd, int nIt) throws SQLException {
+       
+             try {
+                String sql;
        
         
         sql ="Delete from DETAILDELIVERY where NODELIVERY=? and NOORDER=? and NOITEM=?";
@@ -56,14 +127,46 @@ public class DetailDelivery {
         
         int s1 = stm.executeUpdate();
         
-        System.out.println(s1+"  -");
+        mainObject = new JSONObject();
+                 if(s1==1)
+                   mainObject.accumulate("Status", "Successfully deleted");
+                 else 
+                   mainObject.accumulate("Status", "Record not found");
+                  System.out.println(s1 +" row(s) deleted!.");
+                }
+     
+                catch(Exception e)
+                {
+                    mainObject.accumulate("Status", "Error deleting");
+                     System.out.println(" Error : "+e.getMessage());
+             }
+            
+            finally{
+                    try {
+                        //Write Status of current deletion into json file
+                        akk.writeJsonObject("Status",mainObject);
+                        mainObject.clear();
+                        //Read Status of current deletion from json file
+                        String json = akk.readJson("Status");
+                        //FileReader.loadFileIntoString("json/client.json", "UTF-8");
+                        JSONObject tempObj = JSONObject.fromObject(json);
+                        System.out.println(tempObj);
+                        con.close();
+                        stm.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(Clients.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (IOException ex) {
+              Logger.getLogger(Clients.class.getName()).log(Level.SEVERE, null, ex);
+          }
+                }
+       
     }
     
         
         
-         public void updateDetailDelivery(Connection con, int numDel, int numOrd, int nIt,int qut) throws SQLException {
+         public void updateDetailDelivery( int numDel, int numOrd, int nIt,int qut) throws SQLException {
+        try{
         String sql;
-        PreparedStatement stm;
         
         
        sql ="Update DETAILDELIVERY set QUANTITYDELIVRY=?  where NODELIVERY=? and NOORDER=? and NOITEM=?";
@@ -77,23 +180,63 @@ public class DetailDelivery {
         
       
          int s1 = stm.executeUpdate();
-        System.out.println(s1+"  -");
+        mainObject = new JSONObject();
+            
+        
+           
+            
+            if(s1==1)
+                  mainObject.accumulate("Status", "Successfully Updated");
+             else 
+                   mainObject.accumulate("Status", "Record not found");
+             System.out.println(s1 +" row(s) updated!.");
+                }
+            
+   
+     
+            catch(Exception e)
+            {
+                mainObject.accumulate("Status", "Error Updating");
+                  System.out.println(" Error : "+e.getMessage());
+            }
+            
+            finally{
+                    try {
+                        //Write Status of current updation into json file
+                        akk.writeJsonObject("Status",mainObject);
+                        mainObject.clear();
+                        //Read Status of current updation from json file
+                        String json = akk.readJson("Status");
+
+                        JSONObject tempObj = JSONObject.fromObject(json);
+                        System.out.println(tempObj);
+                        con.close();
+                        stm.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(Clients.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (IOException ex) {
+              Logger.getLogger(Clients.class.getName()).log(Level.SEVERE, null, ex);
+          }
+                }
+       
     }
+    
     
          
          
          
-          public void listDetailDelivery(Connection con) throws SQLException {
-        String sql;
-        Statement stm;
+          public void listDetailDelivery() throws SQLException {
+        try {
+                   String sql;
         
         
        sql ="Select * from DETAILDELIVERY";
-       stm=con.createStatement();
-            
-            ResultSet rs=stm.executeQuery(sql);
-            
+      
              int numDel, numOrd,  nIt, qut;
+              mainArray = new JSONArray();
+
+                    stm = con.prepareStatement(sql);
+                    rs = stm.executeQuery();
             
            
             
@@ -105,24 +248,69 @@ public class DetailDelivery {
                 qut=rs.getInt("QUANTITYDELIVRY");
                
                
-                
-                System.out.println(numDel+" - "+numOrd+" - "+nIt+" - "+qut);
+               singleDeliveryDetail.clear();
+                singleDeliveryDetail.accumulate("NODELIVERY", numDel);
+                singleDeliveryDetail.accumulate("NOORDER", numOrd);
+                singleDeliveryDetail.accumulate("NOITEM", nIt);
+                singleDeliveryDetail.accumulate("QUANTITYDELIVRY", qut);
+                          mainArray.add(singleDeliveryDetail);
+            }
+              mainObject.accumulate("Status", "Successfully retrived clients list"); 
+                    
+               }
+                     catch(Exception e)
+            {
+                mainObject.accumulate("Status", "Error in in retriving list"); 
+                  System.out.println(" Error : "+e.getMessage());
             }
             
-           
+            finally{
+                    try {
+                        //write list of clients into json
+                        akk.writeJsonArray("client",mainArray);
+                        //read list of clients from json
+                        String json1 = akk.readJson("client");
+                        JSONArray tempObj1 = JSONArray.fromObject(json1);
+                        System.out.println(tempObj1);
+                        
+                        //Write Status of current client list into json file
+                        akk.writeJsonObject("clientStatus",mainObject);
+                        mainObject.clear();
+                        //Read Status of current client list from json file
+                        String json = akk.readJson("clientStatus");
+                        //FileReader.loadFileIntoString("json/client.json", "UTF-8");
+                        JSONObject tempObj = JSONObject.fromObject(json);
+                        System.out.println(tempObj);
+                        rs.close();
+                        con.close();
+                        stm.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(Clients.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (IOException ex) {
+              Logger.getLogger(Clients.class.getName()).log(Level.SEVERE, null, ex);
+          }
+                }
+       
     }
+                   
+                   
+                   
+       
     
           
           
-           public void anyDetailDelivery(Connection con,int numDel, int numOrd, int nIt) throws SQLException {
-        String sql;
-        Statement stm;
+           public void anyDetailDelivery(int numDel, int numOrd, int nIt) throws SQLException {
+         try{
+               String sql;
         
         
-          sql ="Select * from DETAILDELIVERY where NODELIVERY="+numDel+" and NOORDER="+numOrd+" and NOITEM="+nIt+"";
-       stm=con.createStatement();
-            
-            ResultSet rs=stm.executeQuery(sql);
+          sql ="Select * from DETAILDELIVERY where NODELIVERY=? and NOORDER=? and NOITEM=?";
+      
+           stm = con.prepareStatement(sql);
+                       stm.setInt(1, numDel);
+                        stm.setInt(2, numOrd);
+                         stm.setInt(3, nIt);
+                    rs = stm.executeQuery();
             
              int numDel1, numOrd1,  nIt1, qut1;
             
@@ -134,10 +322,64 @@ public class DetailDelivery {
                 numOrd1=rs.getInt("NOORDER");
                  nIt1=rs.getInt("NOITEM");
                 qut1=rs.getInt("QUANTITYDELIVRY");
-               
-               
                 
-                System.out.println(numDel1+" - "+numOrd1+" - "+nIt1+" - "+qut1);
+                 singleDeliveryDetail.clear();
+                singleDeliveryDetail.accumulate("NODELIVERY", numDel);
+                singleDeliveryDetail.accumulate("NOORDER", numOrd);
+                singleDeliveryDetail.accumulate("NOITEM", nIt);
+                singleDeliveryDetail.accumulate("QUANTITYDELIVRY", qut1);
+                          mainArray.add(singleDeliveryDetail);
+               
+               
+              mainObject.clear();   
+                
+                    }
+                    
+                  
+               }
+               
+                catch(Exception e)
+            {
+                mainObject.accumulate("Status", "Error in in retriving client"); 
+                  System.out.println(" Error : "+e.getMessage());
             }
+            
+            finally{
+                    try {
+                        //write client into json
+                        akk.writeJsonArray("client",mainArray);
+                        //read client from json
+                        String json1 = akk.readJson("client");
+                        JSONArray tempObj1 = JSONArray.fromObject(json1);
+                        System.out.println(tempObj1);
+                        
+                        //Write Status of current client info into json file
+                        akk.writeJsonObject("clientStatus",mainObject);
+                        mainObject.clear();
+                        //Read Status of current client info from json file
+                        String json = akk.readJson("clientStatus");
+                        //FileReader.loadFileIntoString("json/client.json", "UTF-8");
+                        JSONObject tempObj = JSONObject.fromObject(json);
+                        System.out.println(tempObj);
+                        rs.close();
+                        con.close();
+                        stm.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(Clients.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (IOException ex) {
+              Logger.getLogger(Clients.class.getName()).log(Level.SEVERE, null, ex);
+          }
+                }
+       
+    }
+                   
+               
+       
+         
+         
+         
+         
     
-           }   }
+           }
+
+
