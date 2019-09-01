@@ -6,8 +6,6 @@
 package anjkulkam.dao;
 
 import anjkulkam.Anjkulkam;
-import anjkulkam.FileReader;
-import anjkulkam.FileWriter;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -15,7 +13,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.sf.json.JSONArray;
@@ -28,8 +25,7 @@ import net.sf.json.JSONObject;
  */
 public class Clients extends Anjkulkam{
     
-   
-    
+
        
       Connection con = null;
       PreparedStatement stm = null;
@@ -50,8 +46,6 @@ public class Clients extends Anjkulkam{
             DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
             con = DriverManager.getConnection("jdbc:oracle:thin:@144.217.163.57:1521:XE", "sales", "anypw");
         } catch (SQLException ex) {
-            System.out.println("In catch of constructor");
-            //Logger.getLogger(Clients.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println( " Error : "+ex.getMessage());
         }
         
@@ -76,7 +70,7 @@ public class Clients extends Anjkulkam{
         
         //System.out.println(s1 +" row(s) inserted!.");
         mainObject = new JSONObject();
-                    mainObject.accumulate("Status", "Successfully inserted");
+        mainObject.accumulate("Status", "Successfully inserted");
         
       }
       
@@ -99,8 +93,11 @@ public class Clients extends Anjkulkam{
                         
                         JSONObject tempObj = JSONObject.fromObject(json);
                         System.out.println(tempObj);
-                        con.close();
-                        stm.close();
+                        
+                        if (stm != null)
+                            stm.close();
+                        if (con != null)
+                            con.close();
                     } catch (SQLException ex) {
                         Logger.getLogger(Clients.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (IOException ex) {
@@ -148,8 +145,11 @@ public class Clients extends Anjkulkam{
                         //FileReader.loadFileIntoString("json/client.json", "UTF-8");
                         JSONObject tempObj = JSONObject.fromObject(json);
                         System.out.println(tempObj);
-                        con.close();
-                        stm.close();
+                        
+                        if (stm != null)
+                            stm.close();
+                        if (con != null)
+                            con.close();
                     } catch (SQLException ex) {
                         Logger.getLogger(Clients.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (IOException ex) {
@@ -204,8 +204,11 @@ public class Clients extends Anjkulkam{
 
                         JSONObject tempObj = JSONObject.fromObject(json);
                         System.out.println(tempObj);
-                        con.close();
-                        stm.close();
+                        
+                        if (stm != null)
+                            stm.close();
+                        if (con != null)
+                            con.close();
                     } catch (SQLException ex) {
                         Logger.getLogger(Clients.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (IOException ex) {
@@ -257,6 +260,7 @@ public class Clients extends Anjkulkam{
             }
             
             finally{
+                   
                     try {
                         //write list of clients into json
                         akk.writeJsonArray("client",mainArray);
@@ -273,11 +277,16 @@ public class Clients extends Anjkulkam{
                         //FileReader.loadFileIntoString("json/client.json", "UTF-8");
                         JSONObject tempObj = JSONObject.fromObject(json);
                         System.out.println(tempObj);
-                        rs.close();
-                        con.close();
-                        stm.close();
+                        if (rs != null)
+                            rs.close();
+                        if (stm != null)
+                            stm.close();
+                        if (con != null)
+                            con.close();
+                        
                     } catch (SQLException ex) {
                         Logger.getLogger(Clients.class.getName()).log(Level.SEVERE, null, ex);
+                        System.out.println(" Error : "+ex.getMessage());
                     } catch (IOException ex) {
               Logger.getLogger(Clients.class.getName()).log(Level.SEVERE, null, ex);
           }
@@ -285,18 +294,12 @@ public class Clients extends Anjkulkam{
        
     }
                    
-                   
-                   
-       
- 
-          
-          
+
            public void anyClient(int id) throws SQLException, IOException {
                
                try{
                String sql;
                     sql = "Select * from client where NOCLIENT=?";
-                    // to show that this statement has parameter
                        stm = con.prepareStatement(sql);
                        stm.setInt(1, id);
                     rs = stm.executeQuery();
@@ -313,13 +316,17 @@ public class Clients extends Anjkulkam{
                 singleClient.accumulate("NOCLIENT", cid);
                 singleClient.accumulate("NAMECLIENT", cname);
                 singleClient.accumulate("NOTELEPHONE", rname);
-                 mainArray.add(singleClient);
                 
                 mainObject.clear();   
-                
-                    }
-                    
-                  
+                        }
+
+                                                
+             if(!singleClient.toString().equals("{}"))
+                  mainObject.accumulate("Status", "Successfully retrived client");
+             else if(singleClient.toString().equals("{}"))
+                   mainObject.accumulate("Status", "Record not found");
+                           
+   
                }
                
                 catch(Exception e)
@@ -330,11 +337,11 @@ public class Clients extends Anjkulkam{
             
             finally{
                     try {
-                        //write client into json
-                        akk.writeJsonArray("client",mainArray);
-                        //read client from json
+                        //write client info into json
+                        akk.writeJsonObject("client",singleClient);
+                        //read client info from json
                         String json1 = akk.readJson("client");
-                        JSONArray tempObj1 = JSONArray.fromObject(json1);
+                        JSONObject tempObj1 = JSONObject.fromObject(json1);
                         System.out.println(tempObj1);
                         
                         //Write Status of current client info into json file
@@ -345,9 +352,12 @@ public class Clients extends Anjkulkam{
                         //FileReader.loadFileIntoString("json/client.json", "UTF-8");
                         JSONObject tempObj = JSONObject.fromObject(json);
                         System.out.println(tempObj);
-                        rs.close();
-                        con.close();
-                        stm.close();
+                        if (rs != null)
+                            rs.close();
+                        if (stm != null)
+                            stm.close();
+                        if (con != null)
+                            con.close();
                     } catch (SQLException ex) {
                         Logger.getLogger(Clients.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (IOException ex) {
@@ -357,13 +367,7 @@ public class Clients extends Anjkulkam{
        
     }
                    
-               
-       
-         
-         
-         
-         
-    
+   
            }
 
 
