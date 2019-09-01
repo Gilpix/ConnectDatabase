@@ -20,9 +20,6 @@ import net.sf.json.JSONObject;
  */
 public class Anjkulkam {
 
-    /**
-     * @param args the command line arguments
-     */
     
     
    
@@ -36,65 +33,58 @@ public class Anjkulkam {
             
    
       anjkulkam.dao.Clients c =new anjkulkam.dao.Clients();
-     //c.insertClient(109,"Kamlaaaa","99508655214");
-     // c.deleteClient(111);
-      //c.updateClient(111, "00005000");
-       //c.listClient();
-    //c.anyClient(110);
+      //c.insertClient(109,"Kamlaaaa","99508655214");
+      //c.deleteClient(109);
+      //c.updateClient(109, "00005000");
+      c.listClient();
+      //c.anyClient(109);
         
       
        Date dte=Date.valueOf("2019-03-01");
        anjkulkam.dao.Order ord=new anjkulkam.dao.Order();
-       //ord.insertOrder(16, dte, 1000);
-       //ord.deleteOrder(11);
-      // ord.updateOrder(11, dte);
-      // ord.listOrder();
-       //ord.anyOrder(11);
+       //ord.insertOrder(17, dte, 1000);
+       //ord.deleteOrder(17);
+       //ord.updateOrder(17, dte);
+       //ord.listOrder();
+       //ord.anyOrder(17);
        
       
        
         anjkulkam.dao.DetailOrder detOrd=new anjkulkam.dao.DetailOrder();
-        //detOrd.insertOrderDetail(16, 10, 15);
-        //detOrd.deleteOrderDetail(16, 10);
-       // detOrd.updateOrderDetail(16, 10, 100);
-       // detOrd.listOrderDetail();
-        //detOrd.anyOrderDetail(16, 10);
+        //detOrd.insertOrderDetail(17, 10, 15);
+        //detOrd.deleteOrderDetail(17, 10);
+        //detOrd.updateOrderDetail(17, 10, 1001);
+        //detOrd.listOrderDetail();
+        //detOrd.anyOrderDetail(17, 10);
      
         
          anjkulkam.dao.Items itm= new anjkulkam.dao.Items();
-         //itm.insertItems(con, 12, "KK", 7,9);
-         //itm.deleteItems(con, 10001);
-         //itm.updateItems(con, 11,5.0);
-         //itm.listItems(con);
-         //itm.anyItems(con, 11);
+         //itm.insertItems( 111, "KK", 7,9);
+         //itm.deleteItems(111);
+         //itm.updateItems( 111,5.0);
+         //itm.listItems();
+         //itm.anyItems(11);
          
           anjkulkam.dao.Delivery del =new  anjkulkam.dao.Delivery();
-          //del.insertDelivery( 10, dte);
+          //del.insertDelivery( 11, dte);
           //del.deleteDelivery(8);
           //del.updateDelivery(8, dte);
-          del.listDelivery();
+          //del.listDelivery();
           //del.anyDelivery(8);
        
           
           anjkulkam.dao.DetailDelivery dd = new anjkulkam.dao.DetailDelivery();
-          //dd.insertDetailDelivery(con, 8, 16, 10, 20);
-          //dd.deleteDetailDelivery(con, 8, 16, 10);
-         //dd.updateDetailDelivery(con, 8, 16, 10, 10);
-         // dd.listDetailDelivery(con);
-          //dd.anyDetailDelivery(con, 8, 16, 10);
+          //dd.insertDetailDeliver( 8, 16, 10, 20);
+          //dd.deleteDetailDelivery( 8, 16, 10);
+          //dd.updateDetailDelivery( 8, 16, 10, 10);
+          //dd.listDetailDelivery();
+          //dd.anyDetailDelivery( 8, 16, 10);
       
             
-          
-     
-          
-         
-       
-     
+
            
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(Anjkulkam.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(Anjkulkam.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException | SQLException ex) {
+           Logger.getLogger(Anjkulkam.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         
@@ -102,7 +92,7 @@ public class Anjkulkam {
     }
 
    
-   
+   //Method to Write JSONObject in json file
     public void writeJsonObject(String fileName, JSONObject jsn) throws IOException
           {
                try {
@@ -114,6 +104,7 @@ public class Anjkulkam {
                
                } 
     
+       //Method to Write JSONArray in json file
      public void writeJsonArray(String fileName, JSONArray jsn) 
           {
         try {
@@ -124,7 +115,7 @@ public class Anjkulkam {
         }
           } 
      
-     
+        //Method to Read JSONObject or JSONArray from json file
      public String readJson(String fileName) 
           {
               String json="";
