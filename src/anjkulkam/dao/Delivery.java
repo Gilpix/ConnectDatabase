@@ -236,7 +236,7 @@ public class Delivery {
                 
                 singleDelivery.clear();
                 singleDelivery.accumulate("NODELIVERY", oid);
-                singleDelivery.accumulate("DATEDELIVERY", date1);
+                singleDelivery.accumulate("DATEDELIVERY", date1.toString());
                           
                 mainArray.add(singleDelivery);
           
@@ -284,31 +284,76 @@ public class Delivery {
     
           
           
-           public void anyDelivery(Connection con, int id) throws SQLException {
-        String sql;
-        Statement stm;
+           public void anyDelivery(int id) throws SQLException {
+        
+               
+          try{
+               String sql;
         
         
-       sql ="Select * from DELIVERY where NODELIVERY= "+id;
-       stm=con.createStatement();
+        
+       sql ="Select * from DELIVERY where NODELIVERY=?";
+        stm = con.prepareStatement(sql);   
+        stm.setInt(1, id);
+                    rs = stm.executeQuery();
             
-            ResultSet rs=stm.executeQuery(sql);
-            
-            int oid,cid;
+            int oid;
           
             Date date1; 
             
             while(rs.next())
             {
+                 singleDelivery = new JSONObject();
                 oid=rs.getInt("NODELIVERY");
                 date1=rs.getDate("DATEDELIVERY");
                 
-                System.out.println(oid+" - "+date1.toString());
+                singleDelivery.clear();
+                singleDelivery.accumulate("NODELIVERY", oid);
+                singleDelivery.accumulate("DATEDELIVERY", date1.toString());
+                     mainArray.add(singleDelivery);     
+                
+            mainObject.clear();   
+                
+                    }
+                                // mainObject.accumulate("Status", "Successfully retrived clients list"); 
+
+                    
+                  
+               }
+               
+                catch(Exception e)
+            {
+                mainObject.accumulate("Status", "Error in in retriving client"); 
+                  System.out.println(" Error : "+e.getMessage());
             }
-         
-         
-         
-         
-    
-           }
+            
+            finally{
+                    try {
+                        //write client into json
+                        akk.writeJsonArray("client",mainArray);
+                        //read client from json
+                        String json1 = akk.readJson("client");
+                        JSONArray tempObj1 = JSONArray.fromObject(json1);
+                        System.out.println(tempObj1);
+                        
+                        //Write Status of current client info into json file
+                        akk.writeJsonObject("clientStatus",mainObject);
+                        mainObject.clear();
+                        //Read Status of current client info from json file
+                        String json = akk.readJson("clientStatus");
+                        //FileReader.loadFileIntoString("json/client.json", "UTF-8");
+                        JSONObject tempObj = JSONObject.fromObject(json);
+                        System.out.println(tempObj);
+                        rs.close();
+                        con.close();
+                        stm.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(Clients.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (IOException ex) {
+              Logger.getLogger(Clients.class.getName()).log(Level.SEVERE, null, ex);
+          }
+                }
+       
+    }
+             
 }
