@@ -46,8 +46,6 @@ public class Order {
             DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
             con = DriverManager.getConnection("jdbc:oracle:thin:@144.217.163.57:1521:XE", "sales", "anypw");
         } catch (SQLException ex) {
-            System.out.println("In catch of constructor");
-            //Logger.getLogger(Clients.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println( " Error : "+ex.getMessage());
         }
         
@@ -59,8 +57,6 @@ public class Order {
        public void insertOrder( int num, Date dte,int noOfClent) throws SQLException {
          try {
            String sql;
-        
-       
         
         sql ="Insert into ORDERS values(?,?,?)";
         stm=con.prepareStatement(sql);
@@ -93,8 +89,10 @@ public class Order {
                         
                         JSONObject tempObj = JSONObject.fromObject(json);
                         System.out.println(tempObj);
-                        con.close();
-                        stm.close();
+                        if (stm != null)
+                            stm.close();
+                        if (con != null)
+                            con.close();
                     } catch (SQLException ex) {
                         Logger.getLogger(Clients.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (IOException ex) {
@@ -139,8 +137,10 @@ public class Order {
                         //FileReader.loadFileIntoString("json/client.json", "UTF-8");
                         JSONObject tempObj = JSONObject.fromObject(json);
                         System.out.println(tempObj);
-                        con.close();
-                        stm.close();
+                        if (stm != null)
+                            stm.close();
+                        if (con != null)
+                            con.close();
                     } catch (SQLException ex) {
                         Logger.getLogger(Clients.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (IOException ex) {
@@ -194,8 +194,10 @@ public class Order {
 
                         JSONObject tempObj = JSONObject.fromObject(json);
                         System.out.println(tempObj);
-                        con.close();
-                        stm.close();
+                        if (stm != null)
+                            stm.close();
+                        if (con != null)
+                            con.close();
                     } catch (SQLException ex) {
                         Logger.getLogger(Clients.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (IOException ex) {
@@ -249,24 +251,26 @@ public class Order {
             
             finally{
                     try {
-                        //write list of clients into json
+                        //write list of orders into json
                         akk.writeJsonArray("client",mainArray);
-                        //read list of clients from json
+                        //read list of orders from json
                         String json1 = akk.readJson("client");
                         JSONArray tempObj1 = JSONArray.fromObject(json1);
                         System.out.println(tempObj1);
                         
-                        //Write Status of current client list into json file
-                        akk.writeJsonObject("clientStatus",mainObject);
+                        //Write Status of current orders list into json file
+                        akk.writeJsonObject("Status",mainObject);
                         mainObject.clear();
-                        //Read Status of current client list from json file
-                        String json = akk.readJson("clientStatus");
-                        //FileReader.loadFileIntoString("json/client.json", "UTF-8");
+                        //Read Status of current orders list from json file
+                        String json = akk.readJson("Status");
                         JSONObject tempObj = JSONObject.fromObject(json);
                         System.out.println(tempObj);
-                        rs.close();
-                        con.close();
-                        stm.close();
+                        if (rs != null)
+                            rs.close();
+                        if (stm != null)
+                            stm.close();
+                        if (con != null)
+                            con.close();
                     } catch (SQLException ex) {
                         Logger.getLogger(Clients.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (IOException ex) {
@@ -306,39 +310,46 @@ public class Order {
                 singleOrder.accumulate("NOORDER", oid);
                 singleOrder.accumulate("DATEORDER", date1.toString());
                 singleOrder.accumulate("NOCLIENT", cid);
-                mainArray.add(singleOrder);
                 
                 mainObject.clear();          
             }
+              if(!singleOrder.toString().equals("{}"))
+                  mainObject.accumulate("Status", "Successfully retrived order");
+             else if(singleOrder.toString().equals("{}"))
+                   mainObject.accumulate("Status", "Record not found");
+                           
          
           }
                
+               
                 catch(Exception e)
             {
-                mainObject.accumulate("Status", "Error in in retriving client"); 
+                mainObject.accumulate("Status", "Error in in retriving order"); 
                   System.out.println(" Error : "+e.getMessage());
             }
             
             finally{
                     try {
-                        //write client into json
-                        akk.writeJsonArray("client",mainArray);
-                        //read client from json
+                        //write order into json
+                        akk.writeJsonObject("client",singleOrder);
+                        //read order from json
                         String json1 = akk.readJson("client");
-                        JSONArray tempObj1 = JSONArray.fromObject(json1);
+                        JSONObject tempObj1 = JSONObject.fromObject(json1);
                         System.out.println(tempObj1);
                         
-                        //Write Status of current client info into json file
-                        akk.writeJsonObject("clientStatus",mainObject);
+                        //Write Status of current order info into json file
+                        akk.writeJsonObject("Status",mainObject);
                         mainObject.clear();
-                        //Read Status of current client info from json file
-                        String json = akk.readJson("clientStatus");
-                        //FileReader.loadFileIntoString("json/client.json", "UTF-8");
+                        //Read Status of current order info from json file
+                        String json = akk.readJson("Status");
                         JSONObject tempObj = JSONObject.fromObject(json);
                         System.out.println(tempObj);
-                        rs.close();
-                        con.close();
-                        stm.close();
+                        if (rs != null)
+                            rs.close();
+                        if (stm != null)
+                            stm.close();
+                        if (con != null)
+                            con.close();
                     } catch (SQLException ex) {
                         Logger.getLogger(Clients.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (IOException ex) {

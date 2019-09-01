@@ -46,7 +46,6 @@ public class Delivery {
             DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
             con = DriverManager.getConnection("jdbc:oracle:thin:@144.217.163.57:1521:XE", "sales", "anypw");
         } catch (SQLException ex) {
-            //Logger.getLogger(Clients.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println( " Error : "+ex.getMessage());
         }
         
@@ -91,8 +90,10 @@ public class Delivery {
                         
                         JSONObject tempObj = JSONObject.fromObject(json);
                         System.out.println(tempObj);
-                        stm.close();
-                        con.close();
+                       if (stm != null)
+                            stm.close();
+                        if (con != null)
+                            con.close();
                         
                     } catch (SQLException ex) {
                         Logger.getLogger(Clients.class.getName()).log(Level.SEVERE, null, ex);
@@ -140,8 +141,10 @@ public class Delivery {
                         //FileReader.loadFileIntoString("json/client.json", "UTF-8");
                         JSONObject tempObj = JSONObject.fromObject(json);
                         System.out.println(tempObj);
-                        con.close();
-                        stm.close();
+                        if (stm != null)
+                            stm.close();
+                        if (con != null)
+                            con.close();
                     } catch (SQLException ex) {
                         Logger.getLogger(Clients.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (IOException ex) {
@@ -200,8 +203,10 @@ public class Delivery {
 
                         JSONObject tempObj = JSONObject.fromObject(json);
                         System.out.println(tempObj);
-                        con.close();
-                        stm.close();
+                       if (stm != null)
+                            stm.close();
+                        if (con != null)
+                            con.close();
                     } catch (SQLException ex) {
                         Logger.getLogger(Clients.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (IOException ex) {
@@ -244,35 +249,37 @@ public class Delivery {
                
                 
              }
-                     mainObject.accumulate("Status", "Successfully retrived clients list"); 
+                     mainObject.accumulate("Status", "Successfully retrived Deleveriy list"); 
                     
                }
                      catch(Exception e)
             {
-                mainObject.accumulate("Status", "Error in in retriving list"); 
+                mainObject.accumulate("Status", "Error in in retriving Deleveriy list"); 
                   System.out.println(" Error : "+e.getMessage());
             }
             
             finally{
                     try {
-                        //write list of clients into json
+                        //write list of delevieries into json
                         akk.writeJsonArray("client",mainArray);
-                        //read list of clients from json
+                        //read list of delevieries from json
                         String json1 = akk.readJson("client");
                         JSONArray tempObj1 = JSONArray.fromObject(json1);
                         System.out.println(tempObj1);
                         
-                        //Write Status of current client list into json file
-                        akk.writeJsonObject("clientStatus",mainObject);
+                        //Write Status of current deleviery list into json file
+                        akk.writeJsonObject("Status",mainObject);
                         mainObject.clear();
-                        //Read Status of current client list from json file
-                        String json = akk.readJson("clientStatus");
-                        //FileReader.loadFileIntoString("json/client.json", "UTF-8");
+                        //Read Status of current deleviery list from json file
+                        String json = akk.readJson("Status");
                         JSONObject tempObj = JSONObject.fromObject(json);
                         System.out.println(tempObj);
-                        rs.close();
-                        con.close();
-                        stm.close();
+                       if (rs != null)
+                            rs.close();
+                        if (stm != null)
+                            stm.close();
+                        if (con != null)
+                            con.close();
                     } catch (SQLException ex) {
                         Logger.getLogger(Clients.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (IOException ex) {
@@ -311,12 +318,15 @@ public class Delivery {
                 singleDelivery.clear();
                 singleDelivery.accumulate("NODELIVERY", oid);
                 singleDelivery.accumulate("DATEDELIVERY", date1.toString());
-                     mainArray.add(singleDelivery);     
                 
             mainObject.clear();   
                 
                     }
-                                // mainObject.accumulate("Status", "Successfully retrived clients list"); 
+              if(!singleDelivery.toString().equals("{}"))
+                  mainObject.accumulate("Status", "Successfully retrived Deleveriy");
+             else if(singleDelivery.toString().equals("{}"))
+                   mainObject.accumulate("Status", "Record not found");
+                           
 
                     
                   
@@ -324,30 +334,32 @@ public class Delivery {
                
                 catch(Exception e)
             {
-                mainObject.accumulate("Status", "Error in in retriving client"); 
+                mainObject.accumulate("Status", "Error in in retriving Deleveriy"); 
                   System.out.println(" Error : "+e.getMessage());
             }
             
             finally{
                     try {
-                        //write client into json
-                        akk.writeJsonArray("client",mainArray);
-                        //read client from json
+                        //write deleviery into json
+                        akk.writeJsonObject("client",singleDelivery);
+                        //read deleviery from json
                         String json1 = akk.readJson("client");
-                        JSONArray tempObj1 = JSONArray.fromObject(json1);
+                        JSONObject tempObj1 = JSONObject.fromObject(json1);
                         System.out.println(tempObj1);
                         
-                        //Write Status of current client info into json file
-                        akk.writeJsonObject("clientStatus",mainObject);
+                        //Write Status of current deleviery info into json file
+                        akk.writeJsonObject("Status",mainObject);
                         mainObject.clear();
-                        //Read Status of current client info from json file
-                        String json = akk.readJson("clientStatus");
-                        //FileReader.loadFileIntoString("json/client.json", "UTF-8");
+                        //Read Status of current deleviery info from json file
+                        String json = akk.readJson("Status");
                         JSONObject tempObj = JSONObject.fromObject(json);
                         System.out.println(tempObj);
-                        rs.close();
-                        con.close();
-                        stm.close();
+                        if (rs != null)
+                            rs.close();
+                        if (stm != null)
+                            stm.close();
+                        if (con != null)
+                            con.close();
                     } catch (SQLException ex) {
                         Logger.getLogger(Clients.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (IOException ex) {

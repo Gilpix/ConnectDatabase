@@ -44,8 +44,6 @@ public class DetailDelivery {
             DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
             con = DriverManager.getConnection("jdbc:oracle:thin:@144.217.163.57:1521:XE", "sales", "anypw");
         } catch (SQLException ex) {
-            System.out.println("In catch of constructor");
-            //Logger.getLogger(Clients.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println( " Error : "+ex.getMessage());
         }
         
@@ -60,9 +58,6 @@ public class DetailDelivery {
     public void insertDetailDelivery( int numDel, int numOrd, int nIt,int d_quantity) throws SQLException {
          try { 
            String sql;
-        
-        
-       
         
         sql ="Insert into DETAILDELIVERY values(?,?,?,?)";
         stm=con.prepareStatement(sql);
@@ -97,8 +92,10 @@ public class DetailDelivery {
                         
                         JSONObject tempObj = JSONObject.fromObject(json);
                         System.out.println(tempObj);
-                        con.close();
-                        stm.close();
+                        if (stm != null)
+                            stm.close();
+                        if (con != null)
+                            con.close();
                     } catch (SQLException ex) {
                         Logger.getLogger(Clients.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (IOException ex) {
@@ -148,11 +145,12 @@ public class DetailDelivery {
                         mainObject.clear();
                         //Read Status of current deletion from json file
                         String json = akk.readJson("Status");
-                        //FileReader.loadFileIntoString("json/client.json", "UTF-8");
                         JSONObject tempObj = JSONObject.fromObject(json);
                         System.out.println(tempObj);
-                        con.close();
-                        stm.close();
+                        if (stm != null)
+                            stm.close();
+                        if (con != null)
+                            con.close();
                     } catch (SQLException ex) {
                         Logger.getLogger(Clients.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (IOException ex) {
@@ -210,8 +208,10 @@ public class DetailDelivery {
 
                         JSONObject tempObj = JSONObject.fromObject(json);
                         System.out.println(tempObj);
-                        con.close();
-                        stm.close();
+                        if (stm != null)
+                            stm.close();
+                        if (con != null)
+                            con.close();
                     } catch (SQLException ex) {
                         Logger.getLogger(Clients.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (IOException ex) {
@@ -254,8 +254,12 @@ public class DetailDelivery {
                 singleDeliveryDetail.accumulate("NOITEM", nIt);
                 singleDeliveryDetail.accumulate("QUANTITYDELIVRY", qut);
                           mainArray.add(singleDeliveryDetail);
+                          
+            
             }
-              mainObject.accumulate("Status", "Successfully retrived clients list"); 
+           
+                mainObject.accumulate("Status", "Successfully retrived delivery list"); ;
+             
                     
                }
                      catch(Exception e)
@@ -266,24 +270,26 @@ public class DetailDelivery {
             
             finally{
                     try {
-                        //write list of clients into json
+                        //write list of deleviry details into json
                         akk.writeJsonArray("client",mainArray);
-                        //read list of clients from json
+                        //read list of deleviry details from json
                         String json1 = akk.readJson("client");
                         JSONArray tempObj1 = JSONArray.fromObject(json1);
                         System.out.println(tempObj1);
                         
-                        //Write Status of current client list into json file
-                        akk.writeJsonObject("clientStatus",mainObject);
+                        //Write Status of current deleviry details list into json file
+                        akk.writeJsonObject("Status",mainObject);
                         mainObject.clear();
-                        //Read Status of current client list from json file
-                        String json = akk.readJson("clientStatus");
-                        //FileReader.loadFileIntoString("json/client.json", "UTF-8");
+                        //Read Status of current deleviry details list from json file
+                        String json = akk.readJson("Status");
                         JSONObject tempObj = JSONObject.fromObject(json);
                         System.out.println(tempObj);
-                        rs.close();
-                        con.close();
-                        stm.close();
+                       if (rs != null)
+                            rs.close();
+                        if (stm != null)
+                            stm.close();
+                        if (con != null)
+                            con.close();
                     } catch (SQLException ex) {
                         Logger.getLogger(Clients.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (IOException ex) {
@@ -328,42 +334,48 @@ public class DetailDelivery {
                 singleDeliveryDetail.accumulate("NOORDER", numOrd);
                 singleDeliveryDetail.accumulate("NOITEM", nIt);
                 singleDeliveryDetail.accumulate("QUANTITYDELIVRY", qut1);
-                          mainArray.add(singleDeliveryDetail);
                
                
               mainObject.clear();   
                 
                     }
+              if(!singleDeliveryDetail.toString().equals("{}"))
+                  mainObject.accumulate("Status", "Successfully retrived Delivery detail");
+             else if(singleDeliveryDetail.toString().equals("{}"))
+                   mainObject.accumulate("Status", "Record not found");
+                           
                     
                   
                }
                
                 catch(Exception e)
             {
-                mainObject.accumulate("Status", "Error in in retriving client"); 
+                mainObject.accumulate("Status", "Error in in retriving Delivery detail"); 
                   System.out.println(" Error : "+e.getMessage());
             }
             
             finally{
                     try {
-                        //write client into json
-                        akk.writeJsonArray("client",mainArray);
-                        //read client from json
+                        //write deleviry detail into json
+                        akk.writeJsonObject("client",singleDeliveryDetail);
+                        //read deleviry detail from json
                         String json1 = akk.readJson("client");
-                        JSONArray tempObj1 = JSONArray.fromObject(json1);
+                        JSONObject tempObj1 = JSONObject.fromObject(json1);
                         System.out.println(tempObj1);
                         
-                        //Write Status of current client info into json file
-                        akk.writeJsonObject("clientStatus",mainObject);
+                        //Write Status of current deleviry detail info into json file
+                        akk.writeJsonObject("Status",mainObject);
                         mainObject.clear();
-                        //Read Status of current client info from json file
-                        String json = akk.readJson("clientStatus");
-                        //FileReader.loadFileIntoString("json/client.json", "UTF-8");
+                        //Read Status of current deleviry detail info from json file
+                        String json = akk.readJson("Status");
                         JSONObject tempObj = JSONObject.fromObject(json);
                         System.out.println(tempObj);
-                        rs.close();
-                        con.close();
-                        stm.close();
+                       if (rs != null)
+                            rs.close();
+                        if (stm != null)
+                            stm.close();
+                        if (con != null)
+                            con.close();
                     } catch (SQLException ex) {
                         Logger.getLogger(Clients.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (IOException ex) {

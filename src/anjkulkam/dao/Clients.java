@@ -270,10 +270,10 @@ public class Clients extends Anjkulkam{
                         System.out.println(tempObj1);
                         
                         //Write Status of current client list into json file
-                        akk.writeJsonObject("clientStatus",mainObject);
+                        akk.writeJsonObject("Status",mainObject);
                         mainObject.clear();
                         //Read Status of current client list from json file
-                        String json = akk.readJson("clientStatus");
+                        String json = akk.readJson("Status");
                         //FileReader.loadFileIntoString("json/client.json", "UTF-8");
                         JSONObject tempObj = JSONObject.fromObject(json);
                         System.out.println(tempObj);
@@ -345,10 +345,10 @@ public class Clients extends Anjkulkam{
                         System.out.println(tempObj1);
                         
                         //Write Status of current client info into json file
-                        akk.writeJsonObject("clientStatus",mainObject);
+                        akk.writeJsonObject("Status",mainObject);
                         mainObject.clear();
                         //Read Status of current client info from json file
-                        String json = akk.readJson("clientStatus");
+                        String json = akk.readJson("Status");
                         //FileReader.loadFileIntoString("json/client.json", "UTF-8");
                         JSONObject tempObj = JSONObject.fromObject(json);
                         System.out.println(tempObj);

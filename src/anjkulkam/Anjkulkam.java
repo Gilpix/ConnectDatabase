@@ -35,15 +35,16 @@ public class Anjkulkam {
       anjkulkam.dao.Clients c =new anjkulkam.dao.Clients();
       //c.insertClient(109,"Kamlaaaa","99508655214");
       //c.deleteClient(109);
-      //c.updateClient(109, "00005000");
-      c.listClient();
+      //c.updateClient(109, "5142921514");
+      //c.listClient();
       //c.anyClient(109);
         
       
        Date dte=Date.valueOf("2019-03-01");
+       
        anjkulkam.dao.Order ord=new anjkulkam.dao.Order();
        //ord.insertOrder(17, dte, 1000);
-       //ord.deleteOrder(17);
+       //ord.deleteOrder(19);
        //ord.updateOrder(17, dte);
        //ord.listOrder();
        //ord.anyOrder(17);
@@ -51,8 +52,8 @@ public class Anjkulkam {
       
        
         anjkulkam.dao.DetailOrder detOrd=new anjkulkam.dao.DetailOrder();
-        //detOrd.insertOrderDetail(17, 10, 15);
-        //detOrd.deleteOrderDetail(17, 10);
+        //detOrd.insertOrderDetail(15, 10, 15);
+        //detOrd.deleteOrderDetail(15, 10);
         //detOrd.updateOrderDetail(17, 10, 1001);
         //detOrd.listOrderDetail();
         //detOrd.anyOrderDetail(17, 10);
@@ -63,18 +64,18 @@ public class Anjkulkam {
          //itm.deleteItems(111);
          //itm.updateItems( 111,5.0);
          //itm.listItems();
-         //itm.anyItems(11);
+         //itm.anyItems(111);
          
           anjkulkam.dao.Delivery del =new  anjkulkam.dao.Delivery();
           //del.insertDelivery( 11, dte);
-          //del.deleteDelivery(8);
-          //del.updateDelivery(8, dte);
+          //del.deleteDelivery(11);
+          //del.updateDelivery(11, dte);
           //del.listDelivery();
           //del.anyDelivery(8);
        
           
           anjkulkam.dao.DetailDelivery dd = new anjkulkam.dao.DetailDelivery();
-          //dd.insertDetailDeliver( 8, 16, 10, 20);
+          //dd.insertDetailDelivery( 8, 16, 10, 20);
           //dd.deleteDetailDelivery( 8, 16, 10);
           //dd.updateDetailDelivery( 8, 16, 10, 10);
           //dd.listDetailDelivery();
